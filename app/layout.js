@@ -19,8 +19,8 @@ export default async function RootLayout({ children }) {
   console.log(session)
 
 
-  
 
+////sdgdsg
   let cooks = cookies().get('name')
   console.log('쿠키',cooks)
 
