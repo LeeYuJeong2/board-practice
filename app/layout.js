@@ -29,6 +29,7 @@ export default async function RootLayout({ children }) {
       <body>
       <div className="navbar"> 
   <Link href="/" className="logo">Leeforum</Link> 
+  <Link href="/write" >글쓰기</Link> 
   <Link href="/list">List</Link>
 {
   !session ? <LoginBtn />: <span>{session.user.name}님 <LogoutBtn/></span>

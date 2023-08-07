@@ -1,24 +1,42 @@
 'use client'
 
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import Pagination from "./Pagination"
 
 
 export default function ListItem({result}){
 
-  let [ like, setLike ]=useState(0);
+
+  const [ currentPage, setCurrentPage] = useState(1) //시작 페이지
+
+  const [ postPerPage, setPostPerPage] = useState(5) //페이지에 보여줄 게시글의 갯수 
+
+  const indexOfLastPost = currentPage * postPerPage 
+  
+  const indexOfFirstPost = indexOfLastPost -postPerPage 
+
+  const currentPosts = result.slice(indexOfFirstPost, indexOfLastPost) 
+  //첫번째 인자로 받은 배열의 인덱스부터 마지막 인자로 받은 인덱스 -1 까지 원본 배열에서 잘라내어 반환
+  //5개씩 데이터를 바운딩한다. 
+
+
+//페이지 이동 
+  const paginate =(pageNumbers) => setCurrentPage(pageNumbers)
+  
 
    return (
+    <>
     <div>
     {
-        result.map((ele,idx)=>
+        currentPosts.map((ele,idx)=>
            <div className="list-item" key={idx}>
                 {/* <Link href={`/detail/${ele._id}`}> */}
               <Link  prefetch={false} href={'/detail/' + ele._id}> 
                  <h4>{ele.title}</h4>
                  </Link>
-               <Link href={'/edit/' +result[idx]._id}>🏏</Link>
-               <span onClick={(e)=>{
+               <Link href={'/edit/' +currentPosts[idx]._id}>🏏</Link>
+               {/* <span onClick={(e)=>{
                 fetch('/api/post/delete',
                 {method : 'POST', body : result[idx]._id})
                 .then((r)=>{
@@ -65,8 +83,7 @@ export default function ListItem({result}){
               }
             })
            }}>❤️</span>
-           <p>좋아요 : {like}</p>
-{/* 
+           <p>좋아요 : {like}</p>  
            <span onClick={()=>{
             fetch('/api/like/save',{
               method: 'POST',
@@ -78,9 +95,11 @@ export default function ListItem({result}){
            }}>❤️</span>
             */}
           </div>
-          
+
         )
       }
       </div>
+      <Pagination postsPerPage={postPerPage} totalPosts={result.length} paginate={paginate}/>
+      </>
     )
 }
